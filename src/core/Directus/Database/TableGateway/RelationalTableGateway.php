@@ -478,12 +478,15 @@ class RelationalTableGateway extends BaseTableGateway
         $parentRecordWithoutAlias = [];
         foreach ($recordData as $key => $data) {
             $column = $tableSchema->getField($key);
+            // converting Array to CSV value issue fix #720
+            $data = is_array($data) ? implode($data, ',') : $data;
 
             // NOTE: Each interface or the API should handle the `alias` type
             if ($column && $column->isOneToMany()) {
                 continue;
             }
 
+            $recordData[$key] = $data;
             $parentRecordWithoutAlias[$key] = $data;
         }
 
